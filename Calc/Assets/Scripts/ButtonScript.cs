@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ButtonScript : MonoBehaviour
 {
     public Text name;
-    public Text DigitsText;
+    public GameObject DigitsText;
 
     // Start is called before the first frame update
     void Start()
@@ -22,5 +22,7 @@ public class ButtonScript : MonoBehaviour
 
     public void OnPressed()
     {
+        DigitsText.GetComponent<OutputTextScript>().ChangeOutput(name.text[0]);
+        Debug.Log(name.text[0]);
     }
 }
