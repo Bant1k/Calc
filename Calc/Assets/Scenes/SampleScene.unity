@@ -1668,7 +1668,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1 555 666 000 999 000 000 000 000 000 000 999 999 000 000 00
+  m_Text: 155566600099900000000000000000099999900000000
 --- !u!222 &1227412959
 CanvasRenderer:
   m_ObjectHideFlags: 0

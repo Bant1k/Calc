@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,6 @@ using UnityEngine.UI;
 
 public class OutputTextScript : MonoBehaviour
 {
-    //написать сам калькулятор(преобразование числа)
 
     bool isZero()
     {
@@ -13,6 +13,78 @@ public class OutputTextScript : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    
+    /* old code
+    //calculator line count
+    double Calculate(string inpStr)
+    {
+        //variables for adding two numbers
+        double f1 = Convert.ToDouble(inpStr.Substring(0, FindIndexOfAction(inpStr) - 1));
+        double f2;
+        //indexes of the previous and next action
+        int indexOfAction;
+        int indexOfNextAction;
+
+        while (inpStr.Length!=0)
+        {
+            indexOfAction = FindIndexOfAction(inpStr);
+            indexOfNextAction = FindIndexOfAction(inpStr.Substring(indexOfAction, inpStr.Length));
+
+
+
+            //checking next action for multiplication or division
+            if (inpStr[indexOfNextAction] == '/' && inpStr[indexOfNextAction] == '*')
+            {
+                f2 = Calculate(inpStr.Substring(indexOfAction + 1, inpStr.Length));
+
+            }
+            else
+                f2 = Convert.ToDouble(inpStr.Substring(0, indexOfAction - 1));
+
+            //counting based on action
+            switch (inpStr[indexOfAction])
+            {
+                case '/':
+                    f1 /= f2;
+                    break;
+
+                case '*':
+                    f1 *= f2;
+                    break;
+
+                case '+':
+                    f1 += f2;
+                    break;
+
+                case '-':
+                    f1 -= f2;
+                    break;
+            }
+
+            int indexOfLastMultipli = 0;
+            bool removeFlag = true;
+            while (removeFlag)
+            {
+                indexOfLastMultipli = FindIndexOfAction(inpStr.Substring((indexOfNextAction), inpStr.Length));
+            }
+        }
+
+        return f1;
+    }
+    */
+
+    //calculator line count
+    double Calculate(string inpStr)
+    {
+        var digitsAndOperations = new Dictionary<int, Dictionary<string, string>>();
+        //где-то есть вкладка с заполнением dictionary масивом строк
+        return 1;
+    }
+        int FindIndexOfAction(string inpStr)
+    {
+        return inpStr.IndexOfAny(new char[] { '+', '-', '/', '*' });
     }
 
     // Start is called before the first frame update
@@ -115,52 +187,103 @@ public class OutputTextScript : MonoBehaviour
                 Output.text += ',';
                 break;
 
-                //дописать преобразования текста
             case '=':
                 if (isZero())
                     break;
                 else
+                    Calculate(Output.text);
                     break;
 
             case '+':
                 if (isZero())
                     break;
                 else
-                    break;
+                {
+                    if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
+                            Output.text[Output.text.Length - 1] == '/' || Output.text[Output.text.Length - 1] == '*')
+                        Output.text = Output.text.Remove(Output.text.Length - 1);
+
+                    Output.text += '+';
+                }
+                break;
 
             case '-':
                 if (isZero())
                     break;
                 else
-                    break;
+                {
+                    if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
+                            Output.text[Output.text.Length - 1] == '/' || Output.text[Output.text.Length - 1] == '*')
+                        Output.text = Output.text.Remove(Output.text.Length - 1);
+
+                    Output.text += '-';
+                }
+                break;
 
             case 'b':
                 if (isZero())
                     break;
                 else
+                {
+                    if (Output.text.Length == 1)
+                        Output.text = "0";
+                    else
+                        Output.text = Output.text.Remove(Output.text.Length - 1);
+                }
                     break;
 
             case '*':
                 if (isZero())
                     break;
                 else
-                    break;
+                {
+                    if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
+                            Output.text[Output.text.Length - 1] == '/' || Output.text[Output.text.Length - 1] == '*')
+                        Output.text = Output.text.Remove(Output.text.Length - 1);
+
+                    Output.text += '*';
+                }
+                break;
 
             case '/':
                 if (isZero())
                     break;
                 else
-                    break;
+                {
+                    if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
+                            Output.text[Output.text.Length - 1] == '/' || Output.text[Output.text.Length - 1] == '*')
+                        Output.text = Output.text.Remove(Output.text.Length - 1);
+
+                    Output.text += '/';
+                }
+                break;
 
             case '%':
                 if (isZero())
                     break;
                 else
+                    if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
+                            Output.text[Output.text.Length - 1] == '/' || Output.text[Output.text.Length - 1] == '*')
                     break;
+                double buffer;
+                int indexOfDigit = Output.text.LastIndexOfAny(new char[] { '+', '-', '/', '*' })+1;
+                if (indexOfDigit-1 == -1)
+                {
+                    buffer = Convert.ToDouble(Output.text.Substring(0));
+                    Output.text = Output.text.Remove(0);
+                }
+                else
+                {
+                        buffer = Convert.ToDouble(Output.text.Substring(indexOfDigit, (Output.text.Length - 1) - indexOfDigit));
+                        Output.text = Output.text.Remove(indexOfDigit);
+                }
+                buffer /= 100.0; 
+                Output.text += Convert.ToString(buffer);
+                Debug.Log(buffer);
+                break;
 
             default:
                 return false;
-                break;
 
         }
 
