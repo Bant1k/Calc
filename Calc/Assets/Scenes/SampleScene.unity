@@ -1668,7 +1668,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 155566600099900000000000000000099999900000000
+  m_Text: 5-4+2*2
 --- !u!222 &1227412959
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2128,13 +2128,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1619085928954825198, guid: 99080d1665b0e254a9e8438d553db628, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6391021961812562888, guid: 99080d1665b0e254a9e8438d553db628, type: 3}
       propertyPath: m_Name
       value: Button (percent)
       objectReference: {fileID: 0}
+    - target: {fileID: 6391021961812562888, guid: 99080d1665b0e254a9e8438d553db628, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6776303996596807973, guid: 99080d1665b0e254a9e8438d553db628, type: 3}
       propertyPath: m_Text
-      value: '%'
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8276892789120526668, guid: 99080d1665b0e254a9e8438d553db628, type: 3}
       propertyPath: DigitsText

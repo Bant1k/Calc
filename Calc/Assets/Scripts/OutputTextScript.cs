@@ -15,7 +15,7 @@ public class OutputTextScript : MonoBehaviour
             return false;
     }
 
-    
+
     /* old code
     //calculator line count
     double Calculate(string inpStr)
@@ -78,14 +78,95 @@ public class OutputTextScript : MonoBehaviour
     //calculator line count
     double Calculate(string inpStr)
     {
-        var digitsAndOperations = new Dictionary<int, Dictionary<string, string>>();
-        //где-то есть вкладка с заполнением dictionary масивом строк
-        return 1;
+        /*
+            List<List<object>> list = new List<List<object>>(); //инициализация
+            list.Add(new List<object>);//добавление новой строки
+            list[0].Add("asd")//добавление столбца в новую строку
+            list[0][0];//обращение к первому столбцу первой строки
+        */
+
+        //list of operators and digits (mas[next_operator][this_digit])
+        List<List<string>> digitsAndOperations = new List<List<string>>();
+
+        string[] doubles = inpStr.Split(new char[] { '+', '-', '/', '*' });
+
+        int indexOfList = 0;
+        int indexOfDoubles = 0;
+
+        //fill massive of strings
+        for (int i = 0; i < inpStr.Length; i++)
+        {
+            if (inpStr[i] == '+' || inpStr[i] == '-' || inpStr[i] == '*' || inpStr[i] == '/')
+            {
+                digitsAndOperations.Add(new List<string>());
+                digitsAndOperations[indexOfList].Add(doubles[indexOfDoubles]);
+                digitsAndOperations[indexOfList].Add(Convert.ToString(inpStr[i]));
+
+                indexOfList++;
+                indexOfDoubles++;
+            }
+
+        }
+        //add one more pair of digit and void operator
+        digitsAndOperations.Add(new List<string>());
+        digitsAndOperations[indexOfList].Add(doubles[indexOfDoubles]);
+        digitsAndOperations[indexOfList].Add(" ");
+
+        double result = Convert.ToDouble(digitsAndOperations[0][0]);
+        double d2 = Convert.ToDouble(digitsAndOperations[1][0]);
+        int counter;
+
+        //if many multiply find it and do it all while not some else
+        for (indexOfList = 1; indexOfList < digitsAndOperations.Count; indexOfList++)
+        {
+            counter = 0;
+            while (digitsAndOperations[indexOfList][1] == "/" || digitsAndOperations[indexOfList][1] == "*")
+            {
+                if (digitsAndOperations[indexOfList][1] == "/")
+                    d2 = Convert.ToDouble(digitsAndOperations[indexOfList][0]) / Convert.ToDouble(digitsAndOperations[indexOfList + 1][0]);
+
+                if (digitsAndOperations[indexOfList][1] == "*")
+                    d2 = Convert.ToDouble(digitsAndOperations[indexOfList][0]) * Convert.ToDouble(digitsAndOperations[indexOfList + 1][0]);
+
+                indexOfList++;
+                counter++;
+            }
+            indexOfList -= counter;
+
+            //serch operation and do it
+            switch (Convert.ToChar(digitsAndOperations[indexOfList-1][1]))
+            {
+                case '+':
+                    result += d2;
+                    break;
+
+                case '-':
+                    result -= d2;
+                    break;
+
+                case '*':
+                    result *= d2;
+                    break;
+
+                case '/':
+                    result /= d2;
+                    break;
+
+                default:
+                    break;
+            }
+            indexOfList += counter;
+        }
+
+        return result;
     }
+
+    /*old code
         int FindIndexOfAction(string inpStr)
     {
         return inpStr.IndexOfAny(new char[] { '+', '-', '/', '*' });
     }
+    */
 
     // Start is called before the first frame update
     void Start()
@@ -181,7 +262,8 @@ public class OutputTextScript : MonoBehaviour
                 break;
 
             case ',':
-                if (Output.text.Contains(","))
+                
+                if (Output.text.LastIndexOfAny(new char[] { '/', '*', '-', '+' }) != -1 && Output.text.Substring(Output.text.LastIndexOfAny(new char[] { '/', '*', '-', '+' })).Contains(","))
                     break;
 
                 Output.text += ',';
@@ -191,8 +273,10 @@ public class OutputTextScript : MonoBehaviour
                 if (isZero())
                     break;
                 else
-                    Calculate(Output.text);
+                {
+                    Output.text = Convert.ToString(Calculate(Output.text));
                     break;
+                }
 
             case '+':
                 if (isZero())
@@ -257,7 +341,8 @@ public class OutputTextScript : MonoBehaviour
                     Output.text += '/';
                 }
                 break;
-
+                
+                /* нахождение процента от числа
             case '%':
                 if (isZero())
                     break;
@@ -281,6 +366,7 @@ public class OutputTextScript : MonoBehaviour
                 Output.text += Convert.ToString(buffer);
                 Debug.Log(buffer);
                 break;
+                */
 
             default:
                 return false;
