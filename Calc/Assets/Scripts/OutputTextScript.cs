@@ -88,6 +88,7 @@ public class OutputTextScript : MonoBehaviour
         //list of operators and digits (mas[next_operator][this_digit])
         List<List<string>> digitsAndOperations = new List<List<string>>();
 
+        //временная переменная для чисел
         string[] doubles = inpStr.Split(new char[] { '+', '-', '/', '*' });
 
         int indexOfList = 0;
@@ -96,9 +97,18 @@ public class OutputTextScript : MonoBehaviour
         //fill massive of strings
         for (int i = 0; i < inpStr.Length; i++)
         {
+            //нахождение операторов и заполнение всех данных в массив
             if (inpStr[i] == '+' || inpStr[i] == '-' || inpStr[i] == '*' || inpStr[i] == '/')
             {
+                //проверка на первое отрицательное
+                if (i == 0 && inpStr[i] == '-')
+                {
+                    doubles[indexOfDoubles] = "0";
+                }
+
                 digitsAndOperations.Add(new List<string>());
+
+
                 digitsAndOperations[indexOfList].Add(doubles[indexOfDoubles]);
                 digitsAndOperations[indexOfList].Add(Convert.ToString(inpStr[i]));
 
@@ -107,6 +117,7 @@ public class OutputTextScript : MonoBehaviour
             }
 
         }
+
         //add one more pair of digit and void operator
         digitsAndOperations.Add(new List<string>());
         digitsAndOperations[indexOfList].Add(doubles[indexOfDoubles]);
@@ -131,7 +142,13 @@ public class OutputTextScript : MonoBehaviour
                 indexOfList++;
                 counter++;
             }
+
+            //проверка на вход в цикл
+            if (counter == 0)
+                d2 = Convert.ToDouble(digitsAndOperations[indexOfList][0]);
+
             indexOfList -= counter;
+
 
             //serch operation and do it
             switch (Convert.ToChar(digitsAndOperations[indexOfList-1][1]))
@@ -262,16 +279,28 @@ public class OutputTextScript : MonoBehaviour
                 break;
 
             case ',':
-                
-                if (Output.text.LastIndexOfAny(new char[] { '/', '*', '-', '+' }) != -1 && Output.text.Substring(Output.text.LastIndexOfAny(new char[] { '/', '*', '-', '+' })).Contains(","))
-                    break;
+                //есть ли в числе уже ','
+                if ((Output.text.LastIndexOfAny(new char[] { '/', '*', '-', '+' }) == -1 && Output.text.Contains(",")) || 
+                    (Output.text.LastIndexOfAny(new char[] { '/', '*', '-', '+' }) != -1 && Output.text.Substring(Output.text.LastIndexOfAny(new char[] { '/', '*', '-', '+' })).Contains(",")))
+                        break;
 
-                Output.text += ',';
+                //если перед ',' нет никакой цифры добавляем 0
+                if (Output.text.LastIndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != (Output.text[Output.text.Length - 1]))
+                {
+                    Output.text += '0';
+                    Output.text += ',';
+                }
+                else
+                    Output.text += ',';
+
                 break;
 
             case '=':
-                if (isZero())
+                if (isZero() || Output.text == "-" || Output.text == "+" || Output.text == "/" || Output.text == "*")
+                {
+                    Output.text = "0";
                     break;
+                }
                 else
                 {
                     Output.text = Convert.ToString(Calculate(Output.text));
@@ -279,8 +308,11 @@ public class OutputTextScript : MonoBehaviour
                 }
 
             case '+':
-                if (isZero())
+                if (isZero() || Output.text == "-" || Output.text == "+" || Output.text == "/" || Output.text == "*")
+                {
+                    Output.text = "0";
                     break;
+                }
                 else
                 {
                     if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
@@ -292,16 +324,11 @@ public class OutputTextScript : MonoBehaviour
                 break;
 
             case '-':
-                if (isZero())
-                    break;
-                else
-                {
-                    if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
-                            Output.text[Output.text.Length - 1] == '/' || Output.text[Output.text.Length - 1] == '*')
+                if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
+                            Output.text[Output.text.Length - 1] == '/' || Output.text[Output.text.Length - 1] == '*' || isZero())
                         Output.text = Output.text.Remove(Output.text.Length - 1);
 
                     Output.text += '-';
-                }
                 break;
 
             case 'b':
@@ -317,8 +344,11 @@ public class OutputTextScript : MonoBehaviour
                     break;
 
             case '*':
-                if (isZero())
+                if (isZero() || Output.text == "-" || Output.text == "+" || Output.text == "/" || Output.text == "*")
+                {
+                    Output.text = "0";
                     break;
+                }
                 else
                 {
                     if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
@@ -330,8 +360,11 @@ public class OutputTextScript : MonoBehaviour
                 break;
 
             case '/':
-                if (isZero())
+                if (isZero() || Output.text == "-" || Output.text == "+" || Output.text == "/" || Output.text == "*")
+                {
+                    Output.text = "0";
                     break;
+                }
                 else
                 {
                     if (Output.text[Output.text.Length - 1] == '-' || Output.text[Output.text.Length - 1] == '+' ||
