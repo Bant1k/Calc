@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class OutputTextScript : MonoBehaviour
 {
 
-    bool isZero()
+    private bool isZero()
     {
         if (this.GetComponent<Text>().text == "0")
             return true;
@@ -15,184 +15,14 @@ public class OutputTextScript : MonoBehaviour
             return false;
     }
 
-
-    /* old code
-    //calculator line count
-    double Calculate(string inpStr)
-    {
-        //variables for adding two numbers
-        double f1 = Convert.ToDouble(inpStr.Substring(0, FindIndexOfAction(inpStr) - 1));
-        double f2;
-        //indexes of the previous and next action
-        int indexOfAction;
-        int indexOfNextAction;
-
-        while (inpStr.Length!=0)
-        {
-            indexOfAction = FindIndexOfAction(inpStr);
-            indexOfNextAction = FindIndexOfAction(inpStr.Substring(indexOfAction, inpStr.Length));
-
-
-
-            //checking next action for multiplication or division
-            if (inpStr[indexOfNextAction] == '/' && inpStr[indexOfNextAction] == '*')
-            {
-                f2 = Calculate(inpStr.Substring(indexOfAction + 1, inpStr.Length));
-
-            }
-            else
-                f2 = Convert.ToDouble(inpStr.Substring(0, indexOfAction - 1));
-
-            //counting based on action
-            switch (inpStr[indexOfAction])
-            {
-                case '/':
-                    f1 /= f2;
-                    break;
-
-                case '*':
-                    f1 *= f2;
-                    break;
-
-                case '+':
-                    f1 += f2;
-                    break;
-
-                case '-':
-                    f1 -= f2;
-                    break;
-            }
-
-            int indexOfLastMultipli = 0;
-            bool removeFlag = true;
-            while (removeFlag)
-            {
-                indexOfLastMultipli = FindIndexOfAction(inpStr.Substring((indexOfNextAction), inpStr.Length));
-            }
-        }
-
-        return f1;
-    }
-    */
-
-    //calculator line count
-    double Calculate(string inpStr)
-    {
-        /*
-            List<List<object>> list = new List<List<object>>(); //инициализация
-            list.Add(new List<object>);//добавление новой строки
-            list[0].Add("asd")//добавление столбца в новую строку
-            list[0][0];//обращение к первому столбцу первой строки
-        */
-
-        //list of operators and digits (mas[next_operator][this_digit])
-        List<List<string>> digitsAndOperations = new List<List<string>>();
-
-        //временная переменная для чисел
-        string[] doubles = inpStr.Split(new char[] { '+', '-', '/', '*' });
-
-        int indexOfList = 0;
-        int indexOfDoubles = 0;
-
-        //fill massive of strings
-        for (int i = 0; i < inpStr.Length; i++)
-        {
-            //нахождение операторов и заполнение всех данных в массив
-            if (inpStr[i] == '+' || inpStr[i] == '-' || inpStr[i] == '*' || inpStr[i] == '/')
-            {
-                //проверка на первое отрицательное
-                if (i == 0 && inpStr[i] == '-')
-                {
-                    doubles[indexOfDoubles] = "0";
-                }
-
-                digitsAndOperations.Add(new List<string>());
-
-
-                digitsAndOperations[indexOfList].Add(doubles[indexOfDoubles]);
-                digitsAndOperations[indexOfList].Add(Convert.ToString(inpStr[i]));
-
-                indexOfList++;
-                indexOfDoubles++;
-            }
-
-        }
-
-        //add one more pair of digit and void operator
-        digitsAndOperations.Add(new List<string>());
-        digitsAndOperations[indexOfList].Add(doubles[indexOfDoubles]);
-        digitsAndOperations[indexOfList].Add(" ");
-
-        double result = Convert.ToDouble(digitsAndOperations[0][0]);
-        double d2 = Convert.ToDouble(digitsAndOperations[1][0]);
-        int counter;
-
-        //if many multiply find it and do it all while not some else
-        for (indexOfList = 1; indexOfList < digitsAndOperations.Count; indexOfList++)
-        {
-            counter = 0;
-            while (digitsAndOperations[indexOfList][1] == "/" || digitsAndOperations[indexOfList][1] == "*")
-            {
-                if (digitsAndOperations[indexOfList][1] == "/")
-                    d2 = Convert.ToDouble(digitsAndOperations[indexOfList][0]) / Convert.ToDouble(digitsAndOperations[indexOfList + 1][0]);
-
-                if (digitsAndOperations[indexOfList][1] == "*")
-                    d2 = Convert.ToDouble(digitsAndOperations[indexOfList][0]) * Convert.ToDouble(digitsAndOperations[indexOfList + 1][0]);
-
-                indexOfList++;
-                counter++;
-            }
-
-            //проверка на вход в цикл
-            if (counter == 0)
-                d2 = Convert.ToDouble(digitsAndOperations[indexOfList][0]);
-
-            indexOfList -= counter;
-
-
-            //serch operation and do it
-            switch (Convert.ToChar(digitsAndOperations[indexOfList-1][1]))
-            {
-                case '+':
-                    result += d2;
-                    break;
-
-                case '-':
-                    result -= d2;
-                    break;
-
-                case '*':
-                    result *= d2;
-                    break;
-
-                case '/':
-                    result /= d2;
-                    break;
-
-                default:
-                    break;
-            }
-            indexOfList += counter;
-        }
-
-        return result;
-    }
-
-    /*old code
-        int FindIndexOfAction(string inpStr)
-    {
-        return inpStr.IndexOfAny(new char[] { '+', '-', '/', '*' });
-    }
-    */
-
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }
@@ -303,7 +133,7 @@ public class OutputTextScript : MonoBehaviour
                 }
                 else
                 {
-                    Output.text = Convert.ToString(Calculate(Output.text));
+                    Output.text = Convert.ToString(this.GetComponent<Calculate>().CalculateOutput(Output.text));
                     break;
                 }
 
